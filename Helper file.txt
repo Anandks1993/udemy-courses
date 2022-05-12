@@ -1,0 +1,3 @@
+To run mongo db 
+
+"C:\Users\Anand KS\mongodb\bin\mongod.exe" --dbpath="C:\Users\Anand KS\mongodb-data"

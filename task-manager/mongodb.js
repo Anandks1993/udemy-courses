@@ -4,7 +4,7 @@
 // const MongoClient = mongodb.MongoClient;
 // const ObjectID = mongodb.ObjectID;
 
-const { MongoClient, ObjectID } = require('mongodb');
+const { MongoClient, ObjectId } = require('mongodb');
 
 const connectionURL = 'mongodb://127.0.0.1:27017';
 const databaseName = 'task-manager';
@@ -19,6 +19,8 @@ MongoClient.connect(connectionURL, { useNewUrlParser: true }, (error, client) =>
     }
 
     const db = client.db(databaseName);
+
+    // CREATE - START
 
     // db.collection('users').insertOne({
     //     name: 'Mike',
@@ -69,6 +71,10 @@ MongoClient.connect(connectionURL, { useNewUrlParser: true }, (error, client) =>
     //     console.log(result.ops);
     // });
 
+    // CREATE - END
+
+    // READ - START
+
     // db.collection('users').findOne({ _id: new ObjectID("627b8e597580fa0fa4cda371") }, (error, user) => {
     //     if (error) {
     //         return console.log('Unable to fetch.');
@@ -85,11 +91,29 @@ MongoClient.connect(connectionURL, { useNewUrlParser: true }, (error, client) =>
     //     console.log(count)
     // });
 
-    db.collection('tasks').findOne({ _id: new ObjectID('627b8b8d550fc14c44197ebf') }, (error, task) => {
-        console.log(task);
-    });
+    // db.collection('tasks').findOne({ _id: new ObjectID('627b8b8d550fc14c44197ebf') }, (error, task) => {
+    //     console.log(task);
+    // });
 
-    db.collection('tasks').find({ completed: false }).toArray((error, tasks) => {
-        console.log(tasks);
+    // db.collection('tasks').find({ completed: false }).toArray((error, tasks) => {
+    //     console.log(tasks);
+    // });
+
+    // READ - END
+
+    // UPDATE - START
+
+    db.collection('users').updateOne({ 
+        _id: new ObjectId('627b862e75b5a028d8714aef') 
+    }, {
+        $set: {
+            name: 'Joey'
+        }
+    }).then(result => {
+        console.log(result);
+    }).catch(error => {
+        console.log(error);
     });
+    
+    // UPDATE - END
 });
