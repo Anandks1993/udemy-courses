@@ -103,17 +103,49 @@ MongoClient.connect(connectionURL, { useNewUrlParser: true }, (error, client) =>
 
     // UPDATE - START
 
-    db.collection('users').updateOne({ 
-        _id: new ObjectId('627b862e75b5a028d8714aef') 
-    }, {
-        $set: {
-            name: 'Joey'
-        }
-    }).then(result => {
-        console.log(result);
-    }).catch(error => {
-        console.log(error);
-    });
+    // db.collection('users').updateOne({ 
+    //     _id: new ObjectId('627b862e75b5a028d8714aef') 
+    // }, {
+    //     $inc: {
+    //         age: 1
+    //     }
+    // }).then(result => {
+    //     console.log(result);
+    // }).catch(error => {
+    //     console.log(error);
+    // });
     
+    // db.collection('tasks').updateMany({
+    //     completed: false
+    // }, {
+    //     $set: {
+    //         completed: true
+    //     }
+    // }).then(result => {
+    //     console.log(result.modifiedCount);
+    // }).catch(error => {
+    //     console.log(error);
+    // });
+
     // UPDATE - END
+
+    // DELETE - START
+
+    // db.collection('users').deleteMany({
+    //     age: 28
+    // }).then(result => {
+    //     console.log(result);
+    // }).catch(error => {
+    //     console.log(error);
+    // });
+
+    // db.collection('tasks').deleteOne({
+    //     description: 'Buy TV'
+    // }).then(result => {
+    //     console.log(result);
+    // }).catch(error => {
+    //     console.log(error);
+    // });
+
+    // DELETE - END
 });
