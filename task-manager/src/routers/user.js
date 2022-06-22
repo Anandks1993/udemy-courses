@@ -82,35 +82,65 @@ router.get('/users/me', auth, async (req, res) => {
     res.send(req.user);
 });
 
-// Get user by id
-router.get('/users/:id', async (req, res) => {
-    const _id = req.params.id;
+// Get user by id --> This isn't needed as other user's cannot get data.
+// router.get('/users/:id', async (req, res) => {
+//     const _id = req.params.id;
 
-    try {
-        const user = await User.findById(_id);
+//     try {
+//         const user = await User.findById(_id);
         
-        if (!user) {
-            return res.status(404).send();
-        }
+//         if (!user) {
+//             return res.status(404).send();
+//         }
 
-        return res.send(user);
-    } catch (e) {
-        res.status(500).send();
-    }
+//         return res.send(user);
+//     } catch (e) {
+//         res.status(500).send();
+//     }
 
-    // User.findById(_id).then(user => {
-    //     if (!user) {
-    //         return res.status(404).send();
-    //     }
+//     // User.findById(_id).then(user => {
+//     //     if (!user) {
+//     //         return res.status(404).send();
+//     //     }
         
-    //     res.send(user);
-    // }).catch(error => {
-    //     res.status(500).send();
-    // })
-});
+//     //     res.send(user);
+//     // }).catch(error => {
+//     //     res.status(500).send();
+//     // })
+// });
 
-// Update user
-router.patch('/users/:id', async (req, res) => {
+// Update user --> commented out as we need to update only logged in user.
+// router.patch('/users/:id', async (req, res) => {
+//     const updates = Object.keys(req.body);
+//     const allowedUpdates = ['name', 'age', 'email', 'password'];
+//     const isValidOperation = updates.every(update => allowedUpdates.includes(update));
+
+//     if (!isValidOperation) {
+//         return res.status(400).send({ error: 'Invalid updates!' });
+//     }
+
+//     try {
+//         const user = await User.findById(req.params.id);
+
+//         updates.forEach((update) => user[update] = req.body[update]);
+//         await user.save();
+
+//         // This below line is commented out and replaced by the above to make mongoose middleware run before
+//         // saving into the database.
+//         // const user = await User.findByIdAndUpdate(req.params.id, req.body, { new: true, runValidators: true });
+
+//         if (!user) {
+//             res.status(404).send();
+//         }
+
+//         res.send(user);
+//     } catch (e) {
+//         res.status(400).send(e);
+//     }
+// });
+
+// Update logged in user
+router.patch('/users/me', auth, async (req, res) => {
     const updates = Object.keys(req.body);
     const allowedUpdates = ['name', 'age', 'email', 'password'];
     const isValidOperation = updates.every(update => allowedUpdates.includes(update));
@@ -120,35 +150,28 @@ router.patch('/users/:id', async (req, res) => {
     }
 
     try {
-        const user = await User.findById(req.params.id);
+        updates.forEach(update => req.user[update] = req.body[update]);
+        await req.user.save();
 
-        updates.forEach((update) => user[update] = req.body[update]);
-        await user.save();
-
-        // This below line is commented out and replaced by the above to make mongoose middleware run before
-        // saving into the database.
-        // const user = await User.findByIdAndUpdate(req.params.id, req.body, { new: true, runValidators: true });
-
-        if (!user) {
-            res.status(404).send();
-        }
-
-        res.send(user);
+        res.send(req.user);
     } catch (e) {
         res.status(400).send(e);
     }
-});
+})
 
 // Delete User
-router.delete('/users/:id', async (req, res) => {
+router.delete('/users/me', auth, async (req, res) => {
     try {
-        const user = await User.findByIdAndDelete(req.params.id);
-        
-        if (!user) {
-            return res.status(404).send();
-        }
+        // We don't need to check as we already checked before using the auth middleware
+        // we attached user to the req object using the middleware method.
+        // const user = await User.findByIdAndDelete(req.user._id);
+                
+        // if (!user) {
+        //     return res.status(404).send();
+        // }
 
-        res.send(user);
+        await req.user.remove();
+        res.send(req.user);
     } catch (e) {
         res.status(500).send(e);
     }
